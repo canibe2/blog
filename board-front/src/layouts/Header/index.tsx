@@ -117,12 +117,13 @@ const MyPageButton = () => {
   //Event handler  마이페이지 버튼 이벤트
   const onMyPageButtononClickHandler = () => {
     if(!loginUser) return;
-    const { email } = loginUser; 
+    const { email } = loginUser;
     navigate(USER_PATH(email));
   };
   //Event handler  마이페이지 버튼 이벤트
     const onSignOutButtononClickHandler = () => {
-
+      resetLoginUser();
+      setCookie('accessToken', '',{path:MAIN_PATH(), expires : new Date()});
       navigate(MAIN_PATH());
     };
 
@@ -178,6 +179,11 @@ useEffect(() => {
   const isUserPage = pathname.startsWith(USER_PATH(''));
   setUserPage(isUserPage);
 }, [pathname]);
+
+// Effect loginUser가 변경 될때마다 실행 될 함수
+useEffect(() => {
+  setLogin(loginUser !== null);
+},[loginUser])
 
 //Render 레이아웃
     return (
