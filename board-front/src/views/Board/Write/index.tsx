@@ -36,7 +36,7 @@ export default function BoardWrite() {
           </div>
           <div className='divider'></div>
           <div className='board-write-content-box'>
-            <textarea ref={contentRef} className='board-write-content-textarea' style={{resize:'none'}} placeholder='본문을 작성해주세요.' value={content}/>
+            <textarea ref={contentRef} className='board-write-content-textarea' placeholder='본문을 작성해주세요.' value={content}/>
             <div className='icon-button'>
               <div className='icon image-box-light-icon'></div>
             </div>
@@ -44,10 +44,17 @@ export default function BoardWrite() {
           </div>
           <div className='board-write-images-box'>
             <div className='board-write-image-box'>
-              <img className='board-write-image'/>
+              <img className='board-write-image' src='https://assets-prd.ignimgs.com/2023/01/12/lou-1-hero-1673549658507.jpg?width=1920'/>
               <div className='icon-button image-close'>
                 <div className='icon close-icon'></div>
               </div>
+            
+              <div className='board-write-image-box'>
+              <img className='board-write-image' src='https://static1.srcdn.com/wordpress/wp-content/uploads/2018/12/Ada-Wong-Resident-Evil-2-Remake-Capcom.jpg?width=1920'/>
+              <div className='icon-button image-close'>
+                <div className='icon close-icon'></div>
+              </div>
+            </div>
             </div>
           </div>
         </div>
