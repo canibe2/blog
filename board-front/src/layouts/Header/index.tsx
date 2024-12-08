@@ -154,7 +154,7 @@ const UploadButton = () => {
 
   }
 
-  if(!title && content)
+  if(title && content)
 
   return <div className='black-button' onClick={onUploadButtononClickHandler}>{'업로드'}</div>
     //Render 업로드 불가 버튼
@@ -199,7 +199,7 @@ useEffect(() => {
               <div className='icon-box'>
                 <div className='icon logo-dark-icon'></div>
               </div>
-              <div className='header-logo'>{'블로그 만들기'}</div>
+              <div className='header-logo'>{'Board'}</div>
             </div>
               <div className='header-right-box'>
                 {(isAuthPage || isMainPage || isSearchPage || isBoardDetailPage) && <SearchButton/>}

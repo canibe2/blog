@@ -1,6 +1,8 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import './style.css';
-import { useBoardStore } from 'stores';
+import { useBoardStore, useLoginUserStore } from 'stores';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { MAIN_PATH } from 'constants/index';
 
 //Component 게시물 작성
 export default function BoardWrite() {
@@ -20,8 +22,14 @@ export default function BoardWrite() {
   const { boardImageFileList, setBoardImageFileList} = useBoardStore();
   const { resetBoard } = useBoardStore();
 
+  //State 로그인 유저 상태
+  const { loginUser } =  useLoginUserStore();
+
   //State 게시물 이미지 미리보기 URL
   const [imageUrls,setImageUrls] = useState<string[]>([]);
+
+  //Function Navigate
+  const navigator = useNavigate();
 
   //Event handler 제목 변경 이벤트
   const onTitleChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -106,6 +114,11 @@ export default function BoardWrite() {
 
   //Effect mount 실행
   useEffect(() => {
+
+    if(!loginUser) {
+      navigator(MAIN_PATH());
+      return;
+    }
     resetBoard();
   },[]);
 

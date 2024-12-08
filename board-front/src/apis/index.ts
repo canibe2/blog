@@ -72,3 +72,12 @@ export const getSignInUserRequest = async (accessToken : string) => {
     });
     return result;
 }
+
+//파일 업로드 도메인
+const FILE_DOMAIN = `${DOMAIN}/file`;
+
+const FILE_UPLOAD_URL = () => `${FILE_DOMAIN}/upload`;
+
+export const fileUploadRequest = (data : FormData) => {
+    //const result = await.axios.post
+}
