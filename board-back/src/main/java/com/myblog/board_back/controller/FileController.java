@@ -1,7 +1,5 @@
 package com.myblog.board_back.controller;
 
-import javax.print.attribute.standard.Media;
-
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

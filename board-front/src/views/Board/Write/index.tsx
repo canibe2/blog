@@ -3,6 +3,7 @@ import './style.css';
 import { useBoardStore, useLoginUserStore } from 'stores';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { MAIN_PATH } from 'constants/index';
+import { Cookies, useCookies } from 'react-cookie';
 
 //Component 게시물 작성
 export default function BoardWrite() {
@@ -23,20 +24,23 @@ export default function BoardWrite() {
   const { resetBoard } = useBoardStore();
 
   //State 로그인 유저 상태
-  const { loginUser } =  useLoginUserStore();
+  // const { loginUser } =  useLoginUserStore();
+
+  //State cookie 상태
+  const [cookies,setCookies] = useCookies();
 
   //State 게시물 이미지 미리보기 URL
   const [imageUrls,setImageUrls] = useState<string[]>([]);
 
   //Function Navigate
-  const navigator = useNavigate();
+  const navigate = useNavigate();
 
   //Event handler 제목 변경 이벤트
   const onTitleChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const {value} = event.target;
     setTitle(value);
 
-    if(!titleRef.current) 
+    if(!titleRef.current)
       
       return;
       //본문 내용 스크롤 없애기
@@ -49,7 +53,7 @@ export default function BoardWrite() {
     const {value} = event.target;
     setContent(value);
 
-    if(!contentRef.current) 
+    if(!contentRef.current)
       
       return;
       //본문 내용 스크롤 없애기
@@ -115,8 +119,10 @@ export default function BoardWrite() {
   //Effect mount 실행
   useEffect(() => {
 
-    if(!loginUser) {
-      navigator(MAIN_PATH());
+    const accessToken = cookies.accessToken;
+
+    if(!accessToken){
+      navigate(MAIN_PATH());
       return;
     }
     resetBoard();
