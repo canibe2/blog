@@ -2,12 +2,15 @@ package com.myblog.board_back.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myblog.board_back.dto.request.board.PostBoardRequestDto;
+import com.myblog.board_back.dto.response.board.GetBoardResponseDto;
 import com.myblog.board_back.dto.response.board.PostBoardResponseDto;
 import com.myblog.board_back.service.BoardService;
 
@@ -20,6 +23,13 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 
     private final BoardService BoardService;
+
+    @GetMapping("/{boardNumber}")
+    public ResponseEntity<? super GetBoardResponseDto> getBoard(@PathVariable("boardNumber") Integer boardNumbInteger) {
+        ResponseEntity<? super GetBoardResponseDto> response = BoardService.getBoard(boardNumbInteger);
+
+        return response;
+    }
 
     @PostMapping("")
     public ResponseEntity<? super PostBoardResponseDto> postBoard(@RequestBody @Valid PostBoardRequestDto requestBody,
