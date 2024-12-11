@@ -10,6 +10,8 @@ import com.myblog.board_back.repository.resultSet.GetBoardResultSet;
 @Repository
 public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
 
+    boolean existsByBoardNumber(Integer boardNumber);
+
     BoardEntity findByBoardNumber(Integer boardNumber);
 
     @Query(value = "SELECT B.board_number AS boardNumber,\r\n" + //
