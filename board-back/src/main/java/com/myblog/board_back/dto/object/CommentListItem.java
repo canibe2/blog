@@ -2,11 +2,6 @@ package com.myblog.board_back.dto.object;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import com.myblog.board_back.dto.response.board.GetCommentListResponseDto;
 import com.myblog.board_back.repository.resultSet.GetCommentListResultSet;
 
 import lombok.AllArgsConstructor;
