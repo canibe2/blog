@@ -10,6 +10,7 @@ import com.myblog.board_back.dto.request.board.PostBoardRequestDto;
 import com.myblog.board_back.dto.request.board.PostCommentRequestDto;
 import com.myblog.board_back.dto.response.ResponseDto;
 import com.myblog.board_back.dto.response.board.GetBoardResponseDto;
+import com.myblog.board_back.dto.response.board.GetCommentListResponseDto;
 import com.myblog.board_back.dto.response.board.GetFavoriteListResponseDto;
 import com.myblog.board_back.dto.response.board.PostBoardResponseDto;
 import com.myblog.board_back.dto.response.board.PostCommentResponseDto;
@@ -24,6 +25,7 @@ import com.myblog.board_back.repository.FavoriteRepository;
 import com.myblog.board_back.repository.ImageRepository;
 import com.myblog.board_back.repository.UserRepository;
 import com.myblog.board_back.repository.resultSet.GetBoardResultSet;
+import com.myblog.board_back.repository.resultSet.GetCommentListResultSet;
 import com.myblog.board_back.repository.resultSet.GetFavoriteListResultSet;
 import com.myblog.board_back.service.BoardService;
 
@@ -92,6 +94,30 @@ public class BoardServiceImplement implements BoardService {
             return ResponseDto.databaseError();
         }
         return GetFavoriteListResponseDto.success(resultSets);
+    }
+
+    @Override
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber) {
+
+        List<GetCommentListResultSet> resultSets = new ArrayList<>();
+
+        try {
+
+            boolean existedBoard = boardRepository.existsByBoardNumber(boardNumber);
+
+            if (!existedBoard)
+
+                return GetCommentListResponseDto.noExistBoard();
+
+            resultSets = commentRepository.getCommentList(boardNumber);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return ResponseDto.databaseError();
+        }
+        return GetCommentListResponseDto.success(resultSets);
     }
 
     @Override
@@ -207,4 +233,5 @@ public class BoardServiceImplement implements BoardService {
         }
         return PutFavoriteResponseDto.success();
     }
+
 }

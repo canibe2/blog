@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myblog.board_back.dto.request.board.PostBoardRequestDto;
 import com.myblog.board_back.dto.request.board.PostCommentRequestDto;
 import com.myblog.board_back.dto.response.board.GetBoardResponseDto;
+import com.myblog.board_back.dto.response.board.GetCommentListResponseDto;
 import com.myblog.board_back.dto.response.board.GetFavoriteListResponseDto;
 import com.myblog.board_back.dto.response.board.PostBoardResponseDto;
 import com.myblog.board_back.dto.response.board.PostCommentResponseDto;
@@ -27,11 +28,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BoardController {
 
-    private final BoardService BoardService;
+    private final BoardService boardService;
 
     @GetMapping("/{boardNumber}")
     public ResponseEntity<? super GetBoardResponseDto> getBoard(@PathVariable("boardNumber") Integer boardNumbInteger) {
-        ResponseEntity<? super GetBoardResponseDto> response = BoardService.getBoard(boardNumbInteger);
+        ResponseEntity<? super GetBoardResponseDto> response = boardService.getBoard(boardNumbInteger);
 
         return response;
     }
@@ -40,16 +41,25 @@ public class BoardController {
     public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(
             @PathVariable("boardNumber") Integer boardNumber) {
 
-        ResponseEntity<? super GetFavoriteListResponseDto> response = BoardService.getFavoriteList(boardNumber);
+        ResponseEntity<? super GetFavoriteListResponseDto> response = boardService.getFavoriteList(boardNumber);
 
         return response;
 
     }
 
+    @GetMapping("/{boardNumber}/comment-list")
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(
+            @PathVariable("boardNumber") Integer boardNumber) {
+
+        ResponseEntity<? super GetCommentListResponseDto> response = boardService.getCommentList(boardNumber);
+
+        return response;
+    }
+
     @PostMapping("")
     public ResponseEntity<? super PostBoardResponseDto> postBoard(@RequestBody @Valid PostBoardRequestDto requestBody,
             @AuthenticationPrincipal String email) {
-        ResponseEntity<? super PostBoardResponseDto> response = BoardService.postBoard(requestBody, email);
+        ResponseEntity<? super PostBoardResponseDto> response = boardService.postBoard(requestBody, email);
 
         return response;
 
@@ -60,7 +70,7 @@ public class BoardController {
             @RequestBody @Valid PostCommentRequestDto requestBody, @PathVariable("boardNumber") Integer boardNumber,
             @AuthenticationPrincipal String email) {
 
-        ResponseEntity<? super PostCommentResponseDto> response = BoardService.postComment(requestBody, boardNumber,
+        ResponseEntity<? super PostCommentResponseDto> response = boardService.postComment(requestBody, boardNumber,
                 email);
 
         return response;
@@ -71,7 +81,7 @@ public class BoardController {
     public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(@PathVariable("boardNumber") Integer boardNumber,
             @AuthenticationPrincipal String email) {
 
-        ResponseEntity<? super PutFavoriteResponseDto> response = BoardService.putFavorite(boardNumber, email);
+        ResponseEntity<? super PutFavoriteResponseDto> response = boardService.putFavorite(boardNumber, email);
 
         return response;
     }
