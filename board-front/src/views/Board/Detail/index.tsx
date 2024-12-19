@@ -46,8 +46,8 @@ import DefaultProfileImage from 'assets/image/default-profile-image.png';
         </div>
         <div className='divider'></div>
         <div className='board-detail-top-main'>
-          <div className='board-detail-main-text'>{'점심메뉴는 부타동!'}</div>
-          <img className='board-detail-main-image' src='http://hengsa.kr/data/file/event2/41abd9c9a789e1a277b300551e94de37_VsEtxbN3_6742a95982934c52161f64756ea84cab5693f864.jpg'></img>
+          <div className='board-detail-main-text'>{'테일윈드 사용 해보고 싶습니다!'}</div>
+          <img className='board-detail-main-image' src='https://miro.medium.com/v2/resize:fit:828/format:webp/1*__f27S-qQF2CAASt5bOwqg.png'></img>
         </div>
       </div>
       )
@@ -74,7 +74,7 @@ import DefaultProfileImage from 'assets/image/default-profile-image.png';
               <div className='icon-button'>
                 <div className='icon favorite-fill-icon'></div>
               </div>
-              <div className='board-detail-bottom-button-text'>{`좋아요 {$12}`}</div>
+              <div className='board-detail-bottom-button-text'>{`좋아요 ${12}`}</div>
               <div className='icon-button'>
                 <div className='icon up-light-icon'></div>
               </div>
@@ -83,7 +83,7 @@ import DefaultProfileImage from 'assets/image/default-profile-image.png';
               <div className='icon-button'>
                 <div className='icon comment-icon'></div>
               </div>
-              <div className='board-detail-bottom-button-text'>{`댓글 {$12}`}</div>
+              <div className='board-detail-bottom-button-text'>{`댓글 ${12}`}</div>
               <div className='icon-button'>
                 <div className='icon up-light-icon'></div>
               </div>
@@ -108,6 +108,7 @@ import DefaultProfileImage from 'assets/image/default-profile-image.png';
             <div className='board-detail-bottom-comment-pagination-box'>
               <Pagination/>
             </div>
+            <div className='board-detail-bottom-comment-input-box'>
             <div className='board-detail-bottom-comment-input-container'>
               <textarea className='board-detail-bottom-comment-textarea' placeholder='댓글을 작성해주세요.'/>
               <div className='board-detail-bottom-comment-button-box'>
@@ -115,6 +116,7 @@ import DefaultProfileImage from 'assets/image/default-profile-image.png';
               </div>
             </div>
           </div>
+        </div>
         </div>
         
       )
