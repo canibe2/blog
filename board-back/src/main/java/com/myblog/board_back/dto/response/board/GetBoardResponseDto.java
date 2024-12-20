@@ -2,10 +2,8 @@ package com.myblog.board_back.dto.response.board;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import com.myblog.board_back.common.ResponseCode;
 import com.myblog.board_back.common.ResponseMessage;
 import com.myblog.board_back.dto.response.ResponseDto;
