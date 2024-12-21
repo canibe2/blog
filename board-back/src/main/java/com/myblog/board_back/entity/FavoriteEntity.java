@@ -22,6 +22,6 @@ public class FavoriteEntity {
     private String userEmail;
 
     @Id
-    private int boardNumber;
+    private Integer boardNumber;
 
 }
