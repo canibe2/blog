@@ -73,7 +73,7 @@ import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constants/i
 
     }
 
-    //Effect 게심물 번호 path variable 바뀔때마다 게시물 불러오기
+    //Effect 게시물 번호 path variable 바뀔때마다 게시물 불러오기
     useEffect(() => {
       setBoard(boardMock);
     },[boardNumber]);
