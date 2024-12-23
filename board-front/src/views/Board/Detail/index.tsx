@@ -2,13 +2,17 @@
   import './style.css';
 import FavoriteItem from 'components/FavoriteItem';
 import { Board, CommentListItem, FavoriteListItem } from 'types/interface';
-import { boardMock, commentListMock, favoriteListMock } from 'mocks';
+import { commentListMock, favoriteListMock } from 'mocks';
 import CommentItem from 'components/CommentItem';
 import Pagination from 'components/Pagination';
 import DefaultProfileImage from 'assets/image/default-profile-image.png';
 import { useLoginUserStore } from 'stores';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constants/index';
+import { getBoardRequest, increaseViewCountRequest } from 'apis';
+import GetBoardResponseDto from 'apis/response/board/get-board.response.dto';
+import { ResponseDto } from 'apis/response';
+import { IncreaseViewCountResponseDto } from 'apis/response/board';
   //Component 게시물 상세화면
   export default function BoardDetail() {
 
@@ -20,14 +24,55 @@ import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constants/i
     //Function 네비게이트
     const navigator = useNavigate();
 
+    //Function increase view count response
+    const increaseViewCountResponse = (responseBody : IncreaseViewCountResponseDto | ResponseDto | null) => {
+      if(!responseBody)
+        return;
+      const { code }  = responseBody;
+      if(code === 'NB')
+        alert('존재하지 않는 게시물입니다.');
+      if(code === 'DBE')
+        alert('데이터베이스 오류입니다.');
+    }
+
     //Component 게시물 상세 상단
     const BoardDetailTop = () => {
 
-    //State
+    //State 작성자 여부
+    const [isWriter, setWriter] = useState<boolean>(false);
+
+    //State more button
     const [board, setBoard] = useState<Board | null>(null);
 
     //State more button
     const [showMore, setShowMore] = useState<boolean>(false);
+
+    //Function get board response
+    const getBoardResponse = (responseBody : GetBoardResponseDto | ResponseDto | null) => {
+      if(!responseBody)
+        return;
+
+      const  { code } = responseBody;
+
+      if(code === 'NU')
+        alert("존재하지 않는 게시물입니다.");
+      if(code === 'DBE')
+        alert("데이터베이스 오류입니다.");
+      if(code !== 'SU') {
+        navigator(MAIN_PATH());
+        return;
+    }
+    
+    const board : Board = {...responseBody as GetBoardResponseDto};
+    setBoard(board);
+
+    if(!loginUser) {
+      setWriter(false);
+      return;
+    }
+    const isWriter = loginUser.email == board.writerEmail;
+    setWriter(isWriter);
+    }
 
     //Event handler : nickname click
     const onNicknameClickHandler = () => {
@@ -75,7 +120,11 @@ import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constants/i
 
     //Effect 게시물 번호 path variable 바뀔때마다 게시물 불러오기
     useEffect(() => {
-      setBoard(boardMock);
+      if(!boardNumber){
+        navigator(MAIN_PATH());
+        return;
+      }
+      getBoardRequest(boardNumber).then(getBoardResponse);
     },[boardNumber]);
 
     
@@ -93,9 +142,11 @@ import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constants/i
               <div className='board-detail-info-divider'>{'\|'}</div>
               <div className='board-detail-write-date'>{board.writeDatetime}</div>
             </div>
+            {isWriter &&
             <div className='icon-button' onClick={onMoreButtonClickHandler}>
               <div className='icon more-icon'></div>
             </div>
+            }
             {showMore &&
             <div className='board-detail-more-box'>
               <div className='board-detail-update-button' onClick={onUpdateButtonClickHandler}>{'수정'}</div>
@@ -244,6 +295,20 @@ import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constants/i
         
       )
     }
+
+    //Effect 게시물 번호 path variable이 바뀔때 마다 게시물 조회수 증가
+    let effectFlag = true;
+
+    useEffect(() => {
+      if(!boardNumber)
+        return;
+
+      if(effectFlag){
+        effectFlag = false;
+        return;
+      }
+      increaseViewCountRequest(boardNumber).then(increaseViewCountResponse);
+    },[boardNumber]);
 
   //Render 상세
     return (
