@@ -27,19 +27,18 @@ public class BoardEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int boardNumber;
 
-    @Column(name = "title")
     private String title;
-    @Column(name = "content")
+
     private String content;
-    @Column(name = "write_datetime")
+
     private String writeDatetime;
-    @Column(name = "favorite_count")
+
     private int favoriteCount;
-    @Column(name = "comment_count")
+
     private int commentCount;
-    @Column(name = "view_count")
+
     private int viewCount;
-    @Column(name = "writer_email")
+
     private String writerEmail;
 
     public BoardEntity(PostBoardRequestDto dto, String email) {

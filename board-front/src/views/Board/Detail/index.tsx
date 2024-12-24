@@ -9,10 +9,12 @@ import DefaultProfileImage from 'assets/image/default-profile-image.png';
 import { useLoginUserStore } from 'stores';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constants/index';
-import { getBoardRequest, increaseViewCountRequest } from 'apis';
+import { getBoardRequest, getCommentListRequest, getFavoriteListRequest, increaseViewCountRequest } from 'apis';
 import GetBoardResponseDto from 'apis/response/board/get-board.response.dto';
 import { ResponseDto } from 'apis/response';
-import { IncreaseViewCountResponseDto } from 'apis/response/board';
+import { GetCommentListResponseDto, GetFavoriteListResponseDto, IncreaseViewCountResponseDto } from 'apis/response/board';
+import dayjs from 'dayjs'; //npm i dayjs 추가 설치
+
   //Component 게시물 상세화면
   export default function BoardDetail() {
 
@@ -46,6 +48,14 @@ import { IncreaseViewCountResponseDto } from 'apis/response/board';
 
     //State more button
     const [showMore, setShowMore] = useState<boolean>(false);
+
+    //Function writedate format
+    const getWriteDatetimeFormat = () => {
+      if(!board) return '';
+      const date = dayjs(board.writeDatetime);
+      console.log('Invalid Date:', board.writeDatetime);
+      return date.format('YYYY. MM. DD.');
+    }
 
     //Function get board response
     const getBoardResponse = (responseBody : GetBoardResponseDto | ResponseDto | null) => {
@@ -140,7 +150,7 @@ import { IncreaseViewCountResponseDto } from 'apis/response/board';
               <div className='board-detail-writer-profile-image' style={{backgroundImage : `url(${board.writerProfileImage ? board.writerProfileImage : DefaultProfileImage})`}}></div>
               <div className='board-detail-writer-nickname' onClick={onNicknameClickHandler}>{board.writerNickname}</div>
               <div className='board-detail-info-divider'>{'\|'}</div>
-              <div className='board-detail-write-date'>{board.writeDatetime}</div>
+              <div className='board-detail-write-date'>{getWriteDatetimeFormat()}</div>
             </div>
             {isWriter &&
             <div className='icon-button' onClick={onMoreButtonClickHandler}>
@@ -184,6 +194,41 @@ import { IncreaseViewCountResponseDto } from 'apis/response/board';
        //State 댓글
       const [comment, setComment] = useState<string>('');
 
+      //Function get favorite list response
+      const getFavoriteListResponse = (responseBody : GetFavoriteListResponseDto | ResponseDto | null) => {
+        if(!responseBody) return;
+
+        const { code } = responseBody;
+        if(code === 'NB') 
+          alert('존재하지 않는 게시물입니다.');
+        if(code === 'DBE')
+          alert('데이터베이스 오류입니다.');
+        if(code !== 'SU') return;
+
+        const { favoriteList } = responseBody as GetFavoriteListResponseDto;
+        setFavoriteList(favoriteList);
+        if(!loginUser) {
+          setFavorite(false);
+          return;
+        }
+        const isFavorite = favoriteList.findIndex(favorite => favorite.email == loginUser.email) !== -1;
+        setFavorite(isFavorite);
+      }
+
+      const getCommentListResponse = (responseBody : GetCommentListResponseDto | ResponseDto | null) => {
+        if(!responseBody) return;
+
+        const { code } = responseBody;
+        if(code === 'NB') 
+          alert('존재하지 않는 게시물입니다.');
+        if(code === 'DBE')
+          alert('데이터베이스 오류입니다.');
+        if(code !== 'SU') return;
+
+        const { commentList } = responseBody as GetCommentListResponseDto;
+        setCommentList(commentList);
+      }
+
       //Event handler 좋아요 클릭
       const onFavoriteClickHandler = () =>{
         setFavorite(!isFavorite);
@@ -222,8 +267,9 @@ import { IncreaseViewCountResponseDto } from 'apis/response/board';
 
       //Effect 게시물 번호 path variable 바뀔때 마다 좋아요,댓글 리스트 불러오기
       useEffect(() => {
-        setFavoriteList(favoriteListMock);
-        setCommentList(commentListMock);
+        if(!boardNumber) return;
+        getFavoriteListRequest(boardNumber).then(getFavoriteListResponse);
+        getCommentListRequest(boardNumber).then(getCommentListResponse);
 
       },[boardNumber]);
 
@@ -259,7 +305,7 @@ import { IncreaseViewCountResponseDto } from 'apis/response/board';
               </div>
             </div>
           </div>
-          {showFavorite && 
+          {showFavorite &&
           <div className='board-detail-bottom-favorite-box'>
             <div className='board-detail-bottom-favorite-container'>
               <div className='board-detail-bottom-favorite-title'>{'좋아요 '}<span className='emphasis'>{favoriteList.length}</span></div>
@@ -281,6 +327,7 @@ import { IncreaseViewCountResponseDto } from 'apis/response/board';
             <div className='board-detail-bottom-comment-pagination-box'>
               <Pagination/>
             </div>
+            {loginUser !== null &&
             <div className='board-detail-bottom-comment-input-box'>
             <div className='board-detail-bottom-comment-input-container'>
               <textarea ref={commentRef} className='board-detail-bottom-comment-textarea' placeholder='댓글을 작성해주세요.' value={comment} onChange={onCommentChangeHandler}/>
@@ -289,8 +336,9 @@ import { IncreaseViewCountResponseDto } from 'apis/response/board';
               </div>
             </div>
           </div>
-        </div>
           }
+        </div>
+        }
         </div>
         
       )

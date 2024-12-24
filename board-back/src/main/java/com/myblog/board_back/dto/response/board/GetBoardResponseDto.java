@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.myblog.board_back.common.ResponseCode;
 import com.myblog.board_back.common.ResponseMessage;
