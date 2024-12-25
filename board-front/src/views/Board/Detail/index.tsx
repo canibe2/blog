@@ -9,11 +9,13 @@ import DefaultProfileImage from 'assets/image/default-profile-image.png';
 import { useLoginUserStore } from 'stores';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constants/index';
-import { getBoardRequest, getCommentListRequest, getFavoriteListRequest, increaseViewCountRequest } from 'apis';
+import { deleteBoardRequest, getBoardRequest, getCommentListRequest, getFavoriteListRequest, increaseViewCountRequest, postCommentRequest, putFavoriteRequest } from 'apis';
 import GetBoardResponseDto from 'apis/response/board/get-board.response.dto';
 import { ResponseDto } from 'apis/response';
-import { GetCommentListResponseDto, GetFavoriteListResponseDto, IncreaseViewCountResponseDto } from 'apis/response/board';
+import { DeleteBoardResponseDto, GetCommentListResponseDto, GetFavoriteListResponseDto, IncreaseViewCountResponseDto, PostCommentResponseDto, PutFavoriteResponseDto } from 'apis/response/board';
 import dayjs from 'dayjs'; //npm i dayjs 추가 설치
+import { Cookies, useCookies } from 'react-cookie';
+import { PostCommentRequestDto } from 'apis/request/board';
 
   //Component 게시물 상세화면
   export default function BoardDetail() {
@@ -22,8 +24,10 @@ import dayjs from 'dayjs'; //npm i dayjs 추가 설치
     const {boardNumber} = useParams();
     //State  로그인 유저
     const {loginUser} = useLoginUserStore();
+     //State cookie
+    const [cookies, setCookies] = useCookies();
 
-    //Function 네비게이트
+     //Function 네비게이트
     const navigator = useNavigate();
 
     //Function increase view count response
@@ -72,6 +76,7 @@ import dayjs from 'dayjs'; //npm i dayjs 추가 설치
         navigator(MAIN_PATH());
         return;
     }
+  
     
     const board : Board = {...responseBody as GetBoardResponseDto};
     setBoard(board);
@@ -84,7 +89,23 @@ import dayjs from 'dayjs'; //npm i dayjs 추가 설치
     setWriter(isWriter);
     }
 
-    //Event handler : nickname click
+    
+    //Function delete board response
+    const deleteBoardResponse = (responseBody : DeleteBoardResponseDto | ResponseDto | null) => {
+      if(!responseBody) return;
+      const { code } = responseBody;
+      if(code === 'VF') alert('잘못된 접근입니다.');
+      if(code === 'NU') alert('존재하지 않는 유저입니다.');
+      if(code === 'NB') alert('존재하지 않는 게시물입니다.');
+      if(code === 'AF') alert('인증에 실패했습니다.');
+      if(code === 'NP') alert('권한이 없습니다.');
+      if(code === 'DBE') alert('데이터베이스 오류입니다.');
+      if(code !== 'SU') return;
+
+      navigator(MAIN_PATH());
+    }
+
+    //Event handler : 닉네임 클릭
     const onNicknameClickHandler = () => {
       if(!board)
 
@@ -93,12 +114,12 @@ import dayjs from 'dayjs'; //npm i dayjs 추가 설치
       navigator(USER_PATH(board.writerEmail));
     }
 
-     //Event handler : more button click
+     //Event handler : 더보기 버튼 클릭
     const onMoreButtonClickHandler = () => {
       setShowMore(!showMore);
     }
 
-    //Event handler : modify update button click
+    //Event handler : 수정 버튼 클릭
     const onUpdateButtonClickHandler = () => {
       if(!board || !loginUser)
 
@@ -111,20 +132,16 @@ import dayjs from 'dayjs'; //npm i dayjs 추가 설치
         navigator(BOARD_PATH() + '/' + BOARD_UPDATE_PATH(board.boardNumber));
     }
 
-    //Event handler : delete button click
+    //Event handler : 삭제 버튼 클릭
     const onDeleteButtonClickHanlder = () => {
 
-      if(!board || !loginUser)
+      if(!boardNumber || !board || !loginUser || !cookies.accessToken) return;
 
-        return;
+      if(loginUser.email !== board.writerEmail) return;
 
-        if(loginUser.email !== board.writerEmail)
+      deleteBoardRequest(boardNumber, cookies.accessToken).then(deleteBoardResponse);
 
-        return;
 
-        //TODO : Delete Request 
-
-        navigator(MAIN_PATH());
 
     }
 
@@ -176,7 +193,7 @@ import dayjs from 'dayjs'; //npm i dayjs 추가 설치
       )
 
     }
-  //Component 게시물 상세 하단
+    //Component 게시물 상세 하단
     const BoardDetailBottom = () => {
 
       //State 댓글 textarea 참조
@@ -194,12 +211,12 @@ import dayjs from 'dayjs'; //npm i dayjs 추가 설치
        //State 댓글
       const [comment, setComment] = useState<string>('');
 
-      //Function get favorite list response
+       //Function get favorite list response
       const getFavoriteListResponse = (responseBody : GetFavoriteListResponseDto | ResponseDto | null) => {
         if(!responseBody) return;
 
         const { code } = responseBody;
-        if(code === 'NB') 
+        if(code === 'NB')
           alert('존재하지 않는 게시물입니다.');
         if(code === 'DBE')
           alert('데이터베이스 오류입니다.');
@@ -214,12 +231,12 @@ import dayjs from 'dayjs'; //npm i dayjs 추가 설치
         const isFavorite = favoriteList.findIndex(favorite => favorite.email == loginUser.email) !== -1;
         setFavorite(isFavorite);
       }
-
+      //Function get comment list response
       const getCommentListResponse = (responseBody : GetCommentListResponseDto | ResponseDto | null) => {
         if(!responseBody) return;
 
         const { code } = responseBody;
-        if(code === 'NB') 
+        if(code === 'NB')
           alert('존재하지 않는 게시물입니다.');
         if(code === 'DBE')
           alert('데이터베이스 오류입니다.');
@@ -229,9 +246,41 @@ import dayjs from 'dayjs'; //npm i dayjs 추가 설치
         setCommentList(commentList);
       }
 
+    //Function put favorite response
+    const putFavoriteResponse = (responseBody : PutFavoriteResponseDto | ResponseDto | null) => {
+      if(!responseBody) return;
+      const { code } = responseBody;
+      if(code === 'VF') alert('잘못된 접근입니다.');
+      if(code === 'NU') alert('존재하지 않는 유저입니다.');
+      if(code === 'NB') alert('존재하지 않는 게시물입니다.');
+      if(code === 'AF') alert('인증에 실패했습니다.');
+      if(code === 'DBE') alert('데이터베이스 오류입니다.');
+      if(code !== 'SU') return;
+
+      if(!boardNumber) return;
+      getFavoriteListRequest(boardNumber).then(getFavoriteListResponse);
+    }
+
+    //Function post comment response
+    const postCommentResponse = (responseBody : PostCommentResponseDto | ResponseDto | null) => {
+      if(!responseBody) return;
+      const { code } = responseBody;
+      if(code === 'VF') alert('잘못된 접근입니다.');
+      if(code === 'NU') alert('존재하지 않는 유저입니다.');
+      if(code === 'NB') alert('존재하지 않는 게시물입니다.');
+      if(code === 'AF') alert('인증에 실패했습니다.');
+      if(code === 'DBE') alert('데이터베이스 오류입니다.');
+      if(code !== 'SU') return;
+
+      setComment('');
+      if(!boardNumber) return;
+      getCommentListRequest(boardNumber).then(getCommentListResponse);
+    }
+
       //Event handler 좋아요 클릭
       const onFavoriteClickHandler = () =>{
-        setFavorite(!isFavorite);
+        if(!boardNumber || !loginUser || !cookies.accessToken) return;
+        putFavoriteRequest(boardNumber, cookies.accessToken).then(putFavoriteResponse);
       }
       //Event handler 좋아요 보기 클릭
       const onShowFavoriteClickHandler = () =>{
@@ -244,10 +293,15 @@ import dayjs from 'dayjs'; //npm i dayjs 추가 설치
       //Event handler 댓글 작성 버튼 클릭
       const onCommentSubmitButtonClickHandler = () => {
 
-        if(!comment)
+        if(!comment || !boardNumber || !loginUser || !cookies.accessToken) return;
 
-          return;
-          alert('!');
+        const requestBody : PostCommentRequestDto = { content : comment};
+
+        postCommentRequest(boardNumber, requestBody, cookies.accessToken)
+        .then(postCommentResponse);
+
+
+        
 
       }
        //Event handler 댓글 변경
@@ -345,14 +399,13 @@ import dayjs from 'dayjs'; //npm i dayjs 추가 설치
     }
 
     //Effect 게시물 번호 path variable이 바뀔때 마다 게시물 조회수 증가
-    let effectFlag = true;
+    let effectFlag = useRef(true);
 
     useEffect(() => {
-      if(!boardNumber)
-        return;
+      if(!boardNumber) return;
 
-      if(effectFlag){
-        effectFlag = false;
+      if(effectFlag.current){
+        effectFlag.current = false;
         return;
       }
       increaseViewCountRequest(boardNumber).then(increaseViewCountResponse);
