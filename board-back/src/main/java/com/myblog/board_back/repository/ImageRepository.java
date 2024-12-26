@@ -7,8 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import com.myblog.board_back.entity.ImageEntity;
 
+import jakarta.transaction.Transactional;
+
 @Repository
 public interface ImageRepository extends JpaRepository<ImageEntity, Integer> {
 
     List<ImageEntity> findByBoardNumber(Integer boardNumber);
+
+    @Transactional
+    void deleteByBoardNumber(Integer boardNumber);
 }

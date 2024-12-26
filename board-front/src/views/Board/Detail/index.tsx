@@ -140,9 +140,6 @@ import { PostCommentRequestDto } from 'apis/request/board';
       if(loginUser.email !== board.writerEmail) return;
 
       deleteBoardRequest(boardNumber, cookies.accessToken).then(deleteBoardResponse);
-
-
-
     }
 
     //Effect 게시물 번호 path variable 바뀔때마다 게시물 불러오기

@@ -10,6 +10,8 @@ import com.myblog.board_back.entity.FavoriteEntity;
 import com.myblog.board_back.entity.primaryKey.FavoritePk;
 import com.myblog.board_back.repository.resultSet.GetFavoriteListResultSet;
 
+import jakarta.transaction.Transactional;
+
 @Repository
 public interface FavoriteRepository extends JpaRepository<FavoriteEntity, FavoritePk> {
 
@@ -24,4 +26,7 @@ public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Favori
             "   ON F.user_email = U.email " +
             "   WHERE F.board_number=?1; ", nativeQuery = true)
     List<GetFavoriteListResultSet> getFavoriteList(Integer boardNumber);
+
+    @Transactional
+    void deleteByBoardNumber(Integer boardNumber);
 }

@@ -202,7 +202,7 @@ export const putFavoriteRequest = async (boardNumber : number | string, accessTo
         if(!error.response) return null;
         const responseBody : ResponseDto = error.response.data;
             return responseBody;
-
+        
     })
     return result;
 }
