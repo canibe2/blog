@@ -155,6 +155,14 @@
     background-image: url(assets/image/expand-right-light.png);
 }
 
+.expand-left-icon {
+    background-image: url(assets/image/expand-left.png);
+}
+
+.expand-right-icon {
+    background-image: url(assets/image/expand-right.png);
+}
+
 .logo-light-icon {
 
     background-image: url(assets/image/logo-light.png);

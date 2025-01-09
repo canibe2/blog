@@ -13,7 +13,7 @@ import com.myblog.board_back.service.FileService;
 
 @Service
 public class FileServiceImplement implements FileService {
-
+    // 업로드가 되지 않으면 C드라이브에 fileUpload 폴더 생성하기
     @Value("${file.path}")
     private String filePath;
 
