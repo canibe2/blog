@@ -1,22 +1,45 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import './style.css';
 
+//Interface 페이지네이션 컴포넌트 properties
+interface Props {
+  currentPage : number;
+  currentSection : number;
+  setCurrentPage : Dispatch<SetStateAction<number>>;
+  setCurrentSection : Dispatch<SetStateAction<number>>;
+
+  viewPageList : number[];
+  totalSection : number;
+}
+
 //Component Pagination
-export default function Pagination() {
+export default function Pagination(props : Props) {
+
+//State properties
+const { currentPage, currentSection, viewPageList, totalSection } = props;
+
+const { setCurrentPage, setCurrentSection } = props;
+
 
 //Event handler 페이지 번호 클릭 이벤트
 const onPageClickHandler = (page : number) => {
-
+  setCurrentPage(page);
 }
 
 //Event handler 이전 클릭 이벤트
 const onPreviousClickHandler = () => {
+  if(currentSection === 1) return;
+  setCurrentPage((currentSection - 1) * 10);
+  setCurrentSection(currentSection -1);
 
 }
 
 //Event handler 다음 클릭 이벤트
 const onNextClickHandler = () => {
+  if(currentSection === totalSection) return;
 
+  setCurrentPage(currentSection * 10 + 1);
+  setCurrentSection(currentSection + 1);
 }
 
 //Render
@@ -30,9 +53,10 @@ const onNextClickHandler = () => {
       </div>
       <div className='pagination-divider'>{'\|'}</div>
 
-      <div className='pagination-text-active'>{1}</div>
-      <div className='pagination-text' onClick={()=> onPageClickHandler(2)}>{2}</div>
-
+      {viewPageList.map(page => page === currentPage ?
+      <div className='pagination-text-active'>{page}</div> :
+      <div className='pagination-text' onClick={()=> onPageClickHandler(page)}>{page}</div>
+      )}
       <div className='pagination-divider'>{'\|'}</div>
 
       <div className='pagination-change-link-box'>
