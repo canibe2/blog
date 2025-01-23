@@ -13,9 +13,10 @@ import { deleteBoardRequest, getBoardRequest, getCommentListRequest, getFavorite
 import GetBoardResponseDto from 'apis/response/board/get-board.response.dto';
 import { ResponseDto } from 'apis/response';
 import { DeleteBoardResponseDto, GetCommentListResponseDto, GetFavoriteListResponseDto, IncreaseViewCountResponseDto, PostCommentResponseDto, PutFavoriteResponseDto } from 'apis/response/board';
-import dayjs from 'dayjs'; //npm i dayjs 추가 설치
+import dayjs from 'dayjs'; //npm i dayjs 설치
 import { Cookies, useCookies } from 'react-cookie';
 import { PostCommentRequestDto } from 'apis/request/board';
+import { usePagination } from 'hooks';
 
   //Component 게시물 상세화면
   export default function BoardDetail() {
@@ -24,7 +25,7 @@ import { PostCommentRequestDto } from 'apis/request/board';
     const {boardNumber} = useParams();
     //State  로그인 유저
     const {loginUser} = useLoginUserStore();
-     //State cookie
+    //State cookie
     const [cookies, setCookies] = useCookies();
 
      //Function 네비게이트
@@ -195,18 +196,20 @@ import { PostCommentRequestDto } from 'apis/request/board';
 
       //State 댓글 textarea 참조
       const commentRef = useRef<HTMLTextAreaElement | null>(null);
+      //State 페이지네이션 관련
+      const {currentPage, setCurrentPage, currentSection, setCurrentSection, viewList, viewPageList, totalSection, setTotalList} = usePagination<CommentListItem>(3);
       //State 좋아요 리스트
       const [favoriteList, setFavoriteList] = useState<FavoriteListItem[]>([]);
-      //State 댓글 리스트
-      const [commentList, setCommentList] = useState<CommentListItem[]>([]);
       //State 좋아요 상태
       const [isFavorite, setFavorite] = useState<boolean>(false);
       //State 좋아요 보기
       const [showFavorite, setShowFavorite] = useState<boolean>(false);
        //State 댓글 보기
       const [showComment, setShowComment] = useState<boolean>(false);
-       //State 댓글
+      //State 댓글
       const [comment, setComment] = useState<string>('');
+      //State 전체 댓글 개수
+      const [totalCommentCount, setTotalCommentCount] = useState<number>(0);
 
        //Function get favorite list response
       const getFavoriteListResponse = (responseBody : GetFavoriteListResponseDto | ResponseDto | null) => {
@@ -240,7 +243,8 @@ import { PostCommentRequestDto } from 'apis/request/board';
         if(code !== 'SU') return;
 
         const { commentList } = responseBody as GetCommentListResponseDto;
-        setCommentList(commentList);
+        setTotalList(commentList);
+        setTotalCommentCount(commentList.length);
       }
 
     //Function put favorite response
@@ -347,7 +351,7 @@ import { PostCommentRequestDto } from 'apis/request/board';
               <div className='icon-button'>
                 <div className='icon comment-icon'></div>
               </div>
-              <div className='board-detail-bottom-button-text'>{`댓글 ${commentList.length}`}</div>
+              <div className='board-detail-bottom-button-text'>{`댓글 ${totalCommentCount}`}</div>
               <div className='icon-button' onClick={onShowCommentClickHandler}>
                 {showComment ?
                 <div className='icon up-light-icon'></div> :
@@ -369,14 +373,20 @@ import { PostCommentRequestDto } from 'apis/request/board';
           {showComment &&
           <div className='board-detail-bottom-comment-box'>
             <div className='board-detail-bottom-comment-container'>
-              <div className='board-detail-bottom-comment-title'>{'댓글 '}<span className='emphasis'>{commentList.length}</span></div>
+              <div className='board-detail-bottom-comment-title'>{'댓글 '}<span className='emphasis'>{totalCommentCount}</span></div>
               <div className='board-detail-bottom-comment-list-container'>
-                {commentList.map(item => <CommentItem commentListItem={item}/>)}
+                {viewList.map(item => <CommentItem commentListItem={item}/>)}
               </div>
             </div>
             <div className='divider'></div>
             <div className='board-detail-bottom-comment-pagination-box'>
-              <Pagination/>
+              <Pagination
+              currentPage={currentPage}
+              currentSection={currentSection}
+              setCurrentPage={setCurrentPage}
+              setCurrentSection={setCurrentSection}
+              viewPageList={viewPageList}
+              totalSection={totalSection} />
             </div>
             {loginUser !== null &&
             <div className='board-detail-bottom-comment-input-box'>
@@ -391,7 +401,6 @@ import { PostCommentRequestDto } from 'apis/request/board';
         </div>
         }
         </div>
-        
       )
     }
 

@@ -27,7 +27,7 @@ const usePagination = <T>(countPerPage : number) => {
     const setView = () => {
         const FIRST_INDEX = countPerPage * (currentPage -1);
         const LAST_INDEX = totalList.length > countPerPage * currentPage ? countPerPage * currentPage : totalList.length;
-        const viewPageList = totalList.slice(FIRST_INDEX,LAST_INDEX );
+        const viewList = totalList.slice(FIRST_INDEX,LAST_INDEX );
         setViewList(viewList);
     };
 
