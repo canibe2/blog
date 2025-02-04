@@ -6,6 +6,12 @@
     "configurations": [
         {
             "type": "java",
+            "name": "BoardBackApplication",
+            "request": "launch",
+            "mainClass": "com.myblog.board_back.BoardBackApplication"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

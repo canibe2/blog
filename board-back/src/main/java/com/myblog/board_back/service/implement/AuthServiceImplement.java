@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.myblog.board_back.dto.request.auth.SignInRequestDto;
 import com.myblog.board_back.dto.request.auth.SignUpRequestDto;
@@ -15,6 +16,7 @@ import com.myblog.board_back.provider.JwtProvider;
 import com.myblog.board_back.repository.UserRepository;
 import com.myblog.board_back.service.AuthService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,7 +30,7 @@ public class AuthServiceImplement implements AuthService {
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public ResponseEntity<? super SignUpResponseDto> signUp(SignUpRequestDto dto) {
+    public ResponseEntity<? super SignUpResponseDto> signUp(@Valid @RequestBody SignUpRequestDto dto) {
 
         try {
             String email = dto.getEmail();
