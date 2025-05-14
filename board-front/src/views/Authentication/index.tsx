@@ -22,7 +22,7 @@ export default function Authentication() {
   const [cookies, setCookie] = useCookies();
 
   //Function Navigate 함수
-  const navigator = useNavigate();
+  const navigate = useNavigate();
 
   //Component sign in
   const SignInCard = () => {
@@ -67,7 +67,7 @@ export default function Authentication() {
 
       setCookie('accessToken',token,{expires,path:MAIN_PATH()});
 
-      navigator(MAIN_PATH());
+      navigate(MAIN_PATH());
 
     }
 

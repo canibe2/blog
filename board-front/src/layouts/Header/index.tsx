@@ -6,9 +6,9 @@ import { useCookies } from 'react-cookie';
 import { useBoardStore, useLoginUserStore } from 'stores';
 import path from 'path';
 import BoardDetail from 'views/Board/Detail';
-import { fileUploadRequest, postBoardRequest } from 'apis';
-import { PostBoardRequestDto } from 'apis/request/board';
-import { PostBoardResponseDto } from 'apis/response/board';
+import { fileUploadRequest, patchBoardRequest, postBoardRequest } from 'apis';
+import { PatchBoardRequestDto, PostBoardRequestDto } from 'apis/request/board';
+import { PatchBoardResponseDto, PostBoardResponseDto } from 'apis/response/board';
 import { ResponseDto } from 'apis/response';
 
 //Component 헤더 레이아웃
@@ -150,6 +150,9 @@ const MyPageButton = () => {
 //Component 업로드 버튼
 const UploadButton = () => {
 
+  //State 게시물 번호 path variable 
+  const { boardNumber } = useParams();
+
   //State 게시물 상태 
   const {title, content, boardImageFileList, resetBoard} = useBoardStore();
 
@@ -171,13 +174,41 @@ const UploadButton = () => {
         alert('제목과 내용은  필수입니다.');
       
       if (code === 'SU') {
+
         resetBoard();
-        if (loginUser) {
+        if (!loginUser)
+
+          return;
+
           const { email } = loginUser;
+
           navigate(USER_PATH(email));
+}
+      
+    }
+
+    //Function patch board response
+    const patchBoardResponse = (responseBody : PatchBoardResponseDto | ResponseDto | null) => {
+      
+      if(!responseBody) return;
+  
+        const { code } = responseBody;
+  
+        if(code === 'DBE')
+          alert('데이터베이스 오류입니다.');
+  
+        if(code === 'AF' || code === 'NU' || code ==='NB' || code === 'NP')
+          navigate(AUTH_PATH());
+      
+        if(code === 'VF')
+          alert('제목과 내용은  필수입니다.');
+        
+        if (code === 'SU') {
+
+        if(!boardNumber) return;
+
+          navigate(BOARD_PATH() + '/' + BOARD_DETAIL_PATH(boardNumber));
         }
-        return;
-      }
     }
 
 
@@ -198,16 +229,35 @@ const UploadButton = () => {
       
       const url = await fileUploadRequest(data);
 
-      if(url)
-        
-        boardImageList.push(url);
-
+      if(url) boardImageList.push(url);
     }
 
-    const requestBody : PostBoardRequestDto = {
-      title , content , boardImageList
+    const isWriterPage = pathname === BOARD_PATH() + '/' + BOARD_WRITE_PATH();
+
+    if(isWriterPage) {
+
+      const requestBody : PostBoardRequestDto = {
+
+        title,content, boardImageList
     }
-    postBoardRequest(requestBody, accessToken).then(postBoardResponse);
+
+    const response = await postBoardRequest(requestBody, accessToken);
+
+    postBoardResponse(response);
+
+  } else {
+
+    if (!boardNumber)
+      return;
+    
+    const requestBody : PatchBoardRequestDto = {
+      title, content, boardImageList
+    }
+    const response = await patchBoardRequest(boardNumber, requestBody  , accessToken);
+    
+    patchBoardResponse(response);
+  }
+
   }
 
   if(title && content)

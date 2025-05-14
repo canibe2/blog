@@ -10,7 +10,7 @@ import { ResponseDto } from 'apis/response';
 import { convertUrlsToFile } from 'utils';
 
 //Component 게시물 수정
-export default function BoardWrite() {
+export default function BoardUpdate() {
 
   //State 제목 영역 요소 참조
   const titleRef = useRef<HTMLTextAreaElement | null>(null);
@@ -32,9 +32,6 @@ export default function BoardWrite() {
   const { content,setContent } = useBoardStore();
   const { boardImageFileList, setBoardImageFileList} = useBoardStore();
   
-  //State 로그인 유저 상태
-  // const { loginUser } =  useLoginUserStore();
-
   //State cookie 상태
   const [cookies,setCookies] = useCookies();
 
@@ -42,7 +39,7 @@ export default function BoardWrite() {
   const [imageUrls,setImageUrls] = useState<string[]>([]);
 
   //Function Navigate
-  const navigator = useNavigate();
+  const navigate = useNavigate();
 
   //Function get board response
   const getBoardResponse = (responseBody : GetBoardResponseDto | ResponseDto | null) => {
@@ -57,7 +54,7 @@ export default function BoardWrite() {
           if(code === 'DBE')
             alert("데이터베이스 오류입니다.");
           if(code !== 'SU') {
-            navigator(MAIN_PATH());
+            navigate(MAIN_PATH());
             return;
         }
 
@@ -68,7 +65,7 @@ export default function BoardWrite() {
         convertUrlsToFile(boardImageList).then(boardImageFileList => setBoardImageFileList(boardImageFileList));
 
         if(!loginUser || loginUser.email !== writerEmail) {
-          navigator(MAIN_PATH());
+          navigate(MAIN_PATH());
           return;
         }
 
@@ -167,7 +164,7 @@ export default function BoardWrite() {
     const accessToken = cookies.accessToken;
 
     if(!accessToken){
-      navigator(MAIN_PATH());
+      navigate(MAIN_PATH());
       return;
     }
     if(!boardNumber)

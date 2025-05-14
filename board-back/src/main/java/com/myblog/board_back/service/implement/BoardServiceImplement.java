@@ -242,7 +242,7 @@ public class BoardServiceImplement implements BoardService {
 
             if (boardEntity == null)
 
-                return PatchBoardResponseDto.noExistUser();
+                return PatchBoardResponseDto.noExistBoard();
 
             boolean existedUser = userRepository.existsByEmail(email);
 

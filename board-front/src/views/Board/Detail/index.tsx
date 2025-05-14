@@ -21,6 +21,14 @@ import { usePagination } from 'hooks';
   //Component 게시물 상세화면
   export default function BoardDetail() {
 
+    const alertOnceRef = useRef<{[key:string]: boolean}>({});
+
+    const alertOnce = (code:string, message:string) => {
+      if(alertOnceRef.current[code]) return;
+      alertOnceRef.current[code] = true;
+      alert(message);
+    };
+
     //State 게시물 번호 path variable
     const {boardNumber} = useParams();
     //State  로그인 유저
@@ -29,7 +37,7 @@ import { usePagination } from 'hooks';
     const [cookies, setCookies] = useCookies();
 
      //Function 네비게이트
-    const navigator = useNavigate();
+    const navigate = useNavigate();
 
     //Function increase view count response
     const increaseViewCountResponse = (responseBody : IncreaseViewCountResponseDto | ResponseDto | null) => {
@@ -37,9 +45,9 @@ import { usePagination } from 'hooks';
         return;
       const { code }  = responseBody;
       if(code === 'NB')
-        alert('존재하지 않는 게시물입니다.');
+        alertOnce('NB','존재하지 않는 게시물입니다.');
       if(code === 'DBE')
-        alert('데이터베이스 오류입니다.');
+        alertOnce('DBE','데이터베이스 오류입니다.');
     }
 
     //Component 게시물 상세 상단
@@ -58,7 +66,6 @@ import { usePagination } from 'hooks';
     const getWriteDatetimeFormat = () => {
       if(!board) return '';
       const date = dayjs(board.writeDatetime);
-      console.log('Invalid Date:', board.writeDatetime);
       return date.format('YYYY. MM. DD.');
     }
 
@@ -69,12 +76,12 @@ import { usePagination } from 'hooks';
 
       const  { code } = responseBody;
 
-      if(code === 'NU')
-        alert("존재하지 않는 게시물입니다.");
+      if(code === 'NB')
+        alertOnce('NB',"존재하지 않는 게시물입니다.");
       if(code === 'DBE')
-        alert("데이터베이스 오류입니다.");
+        alertOnce('DBE',"데이터베이스 오류입니다.");
       if(code !== 'SU') {
-        navigator(MAIN_PATH());
+        navigate(MAIN_PATH());
         return;
     }
   
@@ -95,15 +102,15 @@ import { usePagination } from 'hooks';
     const deleteBoardResponse = (responseBody : DeleteBoardResponseDto | ResponseDto | null) => {
       if(!responseBody) return;
       const { code } = responseBody;
-      if(code === 'VF') alert('잘못된 접근입니다.');
-      if(code === 'NU') alert('존재하지 않는 유저입니다.');
-      if(code === 'NB') alert('존재하지 않는 게시물입니다.');
-      if(code === 'AF') alert('인증에 실패했습니다.');
-      if(code === 'NP') alert('권한이 없습니다.');
-      if(code === 'DBE') alert('데이터베이스 오류입니다.');
+      if(code === 'VF') alertOnce('VF','잘못된 접근입니다.');
+      if(code === 'NU') alertOnce('NU','존재하지 않는 유저입니다.');
+      if(code === 'NB') alertOnce('NB','존재하지 않는 게시물입니다.');
+      if(code === 'AF') alertOnce('AF','인증에 실패했습니다.');
+      if(code === 'NP') alertOnce('NP','권한이 없습니다.');
+      if(code === 'DBE') alertOnce('DBE','데이터베이스 오류입니다.');
       if(code !== 'SU') return;
 
-      navigator(MAIN_PATH());
+      navigate(MAIN_PATH());
     }
 
     //Event handler : 닉네임 클릭
@@ -112,7 +119,7 @@ import { usePagination } from 'hooks';
 
         return;
 
-      navigator(USER_PATH(board.writerEmail));
+      navigate(USER_PATH(board.writerEmail));
     }
 
      //Event handler : 더보기 버튼 클릭
@@ -130,7 +137,7 @@ import { usePagination } from 'hooks';
 
         return;
 
-        navigator(BOARD_PATH() + '/' + BOARD_UPDATE_PATH(board.boardNumber));
+        navigate(BOARD_PATH() + '/' + BOARD_UPDATE_PATH(board.boardNumber));
     }
 
     //Event handler : 삭제 버튼 클릭
@@ -146,7 +153,7 @@ import { usePagination } from 'hooks';
     //Effect 게시물 번호 path variable 바뀔때마다 게시물 불러오기
     useEffect(() => {
       if(!boardNumber){
-        navigator(MAIN_PATH());
+        navigate(MAIN_PATH());
         return;
       }
       getBoardRequest(boardNumber).then(getBoardResponse);
@@ -217,9 +224,9 @@ import { usePagination } from 'hooks';
 
         const { code } = responseBody;
         if(code === 'NB')
-          alert('존재하지 않는 게시물입니다.');
+          alertOnce('NB','존재하지 않는 게시물입니다.');
         if(code === 'DBE')
-          alert('데이터베이스 오류입니다.');
+          alertOnce('DBE','데이터베이스 오류입니다.');
         if(code !== 'SU') return;
 
         const { favoriteList } = responseBody as GetFavoriteListResponseDto;
@@ -237,9 +244,9 @@ import { usePagination } from 'hooks';
 
         const { code } = responseBody;
         if(code === 'NB')
-          alert('존재하지 않는 게시물입니다.');
+          alertOnce('NB','존재하지 않는 게시물입니다.');
         if(code === 'DBE')
-          alert('데이터베이스 오류입니다.');
+          alertOnce('DBE','데이터베이스 오류입니다.');
         if(code !== 'SU') return;
 
         const { commentList } = responseBody as GetCommentListResponseDto;
@@ -251,11 +258,11 @@ import { usePagination } from 'hooks';
     const putFavoriteResponse = (responseBody : PutFavoriteResponseDto | ResponseDto | null) => {
       if(!responseBody) return;
       const { code } = responseBody;
-      if(code === 'VF') alert('잘못된 접근입니다.');
-      if(code === 'NU') alert('존재하지 않는 유저입니다.');
-      if(code === 'NB') alert('존재하지 않는 게시물입니다.');
-      if(code === 'AF') alert('인증에 실패했습니다.');
-      if(code === 'DBE') alert('데이터베이스 오류입니다.');
+      if(code === 'VF') alertOnce('VF','잘못된 접근입니다.');
+      if(code === 'NU') alertOnce('NU','존재하지 않는 유저입니다.');
+      if(code === 'NB') alertOnce('NB','존재하지 않는 게시물입니다.');
+      if(code === 'AF') alertOnce('AF','인증에 실패했습니다.');
+      if(code === 'DBE') alertOnce('DBE','데이터베이스 오류입니다.');
       if(code !== 'SU') return;
 
       if(!boardNumber) return;
@@ -266,11 +273,11 @@ import { usePagination } from 'hooks';
     const postCommentResponse = (responseBody : PostCommentResponseDto | ResponseDto | null) => {
       if(!responseBody) return;
       const { code } = responseBody;
-      if(code === 'VF') alert('잘못된 접근입니다.');
-      if(code === 'NU') alert('존재하지 않는 유저입니다.');
-      if(code === 'NB') alert('존재하지 않는 게시물입니다.');
-      if(code === 'AF') alert('인증에 실패했습니다.');
-      if(code === 'DBE') alert('데이터베이스 오류입니다.');
+      if(code === 'VF') alertOnce('VF','잘못된 접근입니다.');
+      if(code === 'NU') alertOnce('NU','존재하지 않는 유저입니다.');
+      if(code === 'NB') alertOnce('NB','존재하지 않는 게시물입니다.');
+      if(code === 'AF') alertOnce('AF','인증에 실패했습니다.');
+      if(code === 'DBE') alertOnce('DBE','데이터베이스 오류입니다.');
       if(code !== 'SU') return;
 
       setComment('');
