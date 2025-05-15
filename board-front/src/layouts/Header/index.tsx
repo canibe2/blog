@@ -218,7 +218,6 @@ const UploadButton = () => {
     const accessToken = cookies.accessToken;
     
     if(!accessToken)
-      
       return;
 
     const boardImageList : string[] = [];
