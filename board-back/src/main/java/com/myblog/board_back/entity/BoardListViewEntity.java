@@ -21,13 +21,13 @@ public class BoardListViewEntity {
 
     private String content;
 
-    private String title_image;
+    private String titleImage;
 
-    private int view_count;
+    private int viewCount;
 
-    private int favorite_count;
+    private int favoriteCount;
 
-    private int comment_count;
+    private int commentCount;
 
     private String writeDatetime;
 

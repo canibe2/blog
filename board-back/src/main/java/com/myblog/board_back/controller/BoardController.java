@@ -19,6 +19,7 @@ import com.myblog.board_back.dto.response.board.DeleteBoardResponseDto;
 import com.myblog.board_back.dto.response.board.GetBoardResponseDto;
 import com.myblog.board_back.dto.response.board.GetCommentListResponseDto;
 import com.myblog.board_back.dto.response.board.GetFavoriteListResponseDto;
+import com.myblog.board_back.dto.response.board.GetLatestBoardListResponseDto;
 import com.myblog.board_back.dto.response.board.IncreaseViewCountResponseDto;
 import com.myblog.board_back.dto.response.board.PatchBoardResponseDto;
 import com.myblog.board_back.dto.response.board.PostBoardResponseDto;
@@ -28,6 +29,7 @@ import com.myblog.board_back.service.BoardService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/v1/board")
@@ -107,6 +109,14 @@ public class BoardController {
     public ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(
             @PathVariable("boardNumber") Integer boardNumer) {
         ResponseEntity<? super IncreaseViewCountResponseDto> response = boardService.increaseViewCount(boardNumer);
+        return response;
+    }
+
+    @GetMapping("/latest-list")
+    public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList() {
+
+        ResponseEntity<? super GetLatestBoardListResponseDto> response = boardService.getLatestBoardList();
+
         return response;
     }
 

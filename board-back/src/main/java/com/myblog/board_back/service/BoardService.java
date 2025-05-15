@@ -1,5 +1,6 @@
 package com.myblog.board_back.service;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 
 import com.myblog.board_back.dto.request.board.PatchBoardRequestDto;
@@ -9,6 +10,7 @@ import com.myblog.board_back.dto.response.board.DeleteBoardResponseDto;
 import com.myblog.board_back.dto.response.board.GetBoardResponseDto;
 import com.myblog.board_back.dto.response.board.GetCommentListResponseDto;
 import com.myblog.board_back.dto.response.board.GetFavoriteListResponseDto;
+import com.myblog.board_back.dto.response.board.GetLatestBoardListResponseDto;
 import com.myblog.board_back.dto.response.board.IncreaseViewCountResponseDto;
 import com.myblog.board_back.dto.response.board.PatchBoardResponseDto;
 import com.myblog.board_back.dto.response.board.PostBoardResponseDto;
@@ -35,4 +37,6 @@ public interface BoardService {
 
         ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Integer boardNumber,
                         String email);
+
+        ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList();
 }
