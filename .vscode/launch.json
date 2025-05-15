@@ -23,6 +23,7 @@
             "mainClass": "com.myblog.board_back.BoardBackApplication",
             "projectName": "board-back",
             "vmArgs": "-Xms512m -Xmx1024m"
-        }
+        },
+        
     ]
 }

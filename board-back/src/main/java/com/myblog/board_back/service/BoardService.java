@@ -1,6 +1,5 @@
 package com.myblog.board_back.service;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 
 import com.myblog.board_back.dto.request.board.PatchBoardRequestDto;
