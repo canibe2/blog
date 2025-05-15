@@ -11,6 +11,7 @@ import com.myblog.board_back.dto.response.board.GetBoardResponseDto;
 import com.myblog.board_back.dto.response.board.GetCommentListResponseDto;
 import com.myblog.board_back.dto.response.board.GetFavoriteListResponseDto;
 import com.myblog.board_back.dto.response.board.GetLatestBoardListResponseDto;
+import com.myblog.board_back.dto.response.board.GetTop3BoardListResponseDto;
 import com.myblog.board_back.dto.response.board.IncreaseViewCountResponseDto;
 import com.myblog.board_back.dto.response.board.PatchBoardResponseDto;
 import com.myblog.board_back.dto.response.board.PostBoardResponseDto;
@@ -39,4 +40,6 @@ public interface BoardService {
                         String email);
 
         ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList();
+
+        ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList();
 }
