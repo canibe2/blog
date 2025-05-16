@@ -3,6 +3,8 @@ import './style.css';
 import defaultProfileImage from 'assets/image/default-profile-image.png';
 import { BoardListItem } from 'types/interface';
 import { useNavigate } from 'react-router-dom';
+import { BOARD_PATH } from 'constants/index';
+import { BOARD_DETAIL_PATH } from 'constants/index';
 
 interface Props {
     top3ListItem : BoardListItem
@@ -18,14 +20,14 @@ export default function Top3Item({top3ListItem}: Props) {
 
     //function : 네비게이트 함수 
 
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const onClickHandler = () => {
-     //  navigate(boardNumber);
+    navigate(BOARD_PATH() + '/' + BOARD_DETAIL_PATH(boardNumber));
     }
 
     // render 
-  return (
+    return (
     <div className='top-3-list-item' style={{backgroundImage:`url(${boardTitleImage})`}} onClick={onClickHandler}>
 
         <div className='top-3-list-item-main.box'>

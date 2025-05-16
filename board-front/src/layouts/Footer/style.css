@@ -1,5 +1,4 @@
 #footer {
-    position: fixed;        /* 화면 아래에 고정 */
     bottom: 0;              /* 화면의 가장 아래쪽에 위치 */
     left: 0;
     min-width: 100%;        /* 화면 전체 너비에 맞춤 */
