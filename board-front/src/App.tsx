@@ -88,9 +88,9 @@ return (
       </Route>
     </Routes>
 
-<div style={{display : 'flex', justifyContent:'center', gap:'24px'}}>
+{/* <div style={{display : 'flex', justifyContent:'center', gap:'24px'}}>
         {top3BoardListMock.map(Top3ListItem => <Top3Item key={Top3ListItem.boardNumber} top3ListItem ={Top3ListItem}/>)}
-      </div>
+      </div> */}
 
   </>
 )
