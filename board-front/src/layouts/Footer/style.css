@@ -1,17 +1,27 @@
+/* 푸터 고정 */
 #footer {
-    bottom: 0;              /* 화면의 가장 아래쪽에 위치 */
+    position: fixed;
+    bottom: 0;
     left: 0;
-    min-width: 100%;        /* 화면 전체 너비에 맞춤 */
-    background-color: rgba(55, 55, 55, 1);
-    padding: 60px 0 70px 0;
+    width: 100%;                  /* 화면 너비 전체 */
+    background-color: rgba(60, 60,60, 1);
+    padding: 20px 0 70px 0;
+    z-index: 1000;
+    box-sizing: border-box;
 }
 
+/* 푸터 내부 컨테이너 너비와 정렬 */
 .footer-container {
-    width: 2000px;          /* 컨텐츠 너비 확장 */
-    margin: 0 auto;         /* 가운데 정렬 */
+    width: 2000px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 30px;
+}
+
+/* 본문 아래 여백 - 푸터 높이(대략 130px) 만큼 패딩 */
+body {
+    padding-bottom: 140px;  /* 푸터가 가리지 않도록 여백 확보 */
 }
 
 .footer-top {
