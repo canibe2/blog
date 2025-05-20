@@ -25,4 +25,10 @@ public class SearchLogEntity {
     private String relationWord;
 
     private boolean relation;
+
+    public SearchLogEntity(String searchWord, String relationWord, boolean relation) {
+        this.searchWord = searchWord == null ? "" : searchWord;
+        this.relationWord = relationWord == null ? "" : relationWord;
+        this.relation = relation;
+    }
 }

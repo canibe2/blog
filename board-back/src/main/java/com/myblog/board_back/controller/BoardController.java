@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myblog.board_back.dto.request.board.PatchBoardRequestDto;
 import com.myblog.board_back.dto.request.board.PostBoardRequestDto;
 import com.myblog.board_back.dto.request.board.PostCommentRequestDto;
+import com.myblog.board_back.dto.response.ResponseDto;
 import com.myblog.board_back.dto.response.board.DeleteBoardResponseDto;
 import com.myblog.board_back.dto.response.board.GetBoardResponseDto;
 import com.myblog.board_back.dto.response.board.GetCommentListResponseDto;
 import com.myblog.board_back.dto.response.board.GetFavoriteListResponseDto;
 import com.myblog.board_back.dto.response.board.GetLatestBoardListResponseDto;
+import com.myblog.board_back.dto.response.board.GetSearchBoardListResponseDto;
 import com.myblog.board_back.dto.response.board.GetTop3BoardListResponseDto;
 import com.myblog.board_back.dto.response.board.IncreaseViewCountResponseDto;
 import com.myblog.board_back.dto.response.board.PatchBoardResponseDto;
@@ -124,6 +126,17 @@ public class BoardController {
     public ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList() {
 
         ResponseEntity<? super GetTop3BoardListResponseDto> response = boardService.getTop3BoardList();
+
+        return response;
+    }
+
+    @GetMapping(value = { "/search-list/{searchWord}", "/search-list/{searchWord}/{preSearchWord}" })
+    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoardList(
+            @PathVariable("searchWord") String searchWord,
+            @PathVariable(value = "preSearchWord", required = false) String preSearchWord) {
+
+        ResponseEntity<? super GetSearchBoardListResponseDto> response = boardService.getSearchBoardList(searchWord,
+                preSearchWord);
 
         return response;
     }

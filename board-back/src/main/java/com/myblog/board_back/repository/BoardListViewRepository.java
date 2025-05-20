@@ -10,9 +10,12 @@ import com.myblog.board_back.entity.BoardListViewEntity;
 @Repository
 public interface BoardListViewRepository extends JpaRepository<BoardListViewEntity, Integer> {
 
-    List<BoardListViewEntity> findByOrderByWriteDatetimeDesc();
+        List<BoardListViewEntity> findByOrderByWriteDatetimeDesc();
 
-    List<BoardListViewEntity> findTop3ByWriteDatetimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDatetimeDesc(
-            String writeDatetime); // 최근 3개 게시물 조회
+        List<BoardListViewEntity> findTop3ByWriteDatetimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDatetimeDesc(
+                        String writeDatetime); // 최근 3개 게시물 조회
+
+        List<BoardListViewEntity> findByTitleContainsOrContentContainsOrderByWriteDatetimeDesc(String title,
+                        String content);
 
 }
