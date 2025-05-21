@@ -14,7 +14,6 @@ interface Props {
 export default function BoardItem( {boardListItem} : Props) {
 
     // properties
-
     const { boardNumber, title, content, boardTitleImage} = boardListItem;
     const { favoriteCount, commentCount, viewCount} = boardListItem;
     const { writeDatetime, writerNickname , writerProfileImage } = boardListItem;
@@ -61,5 +60,5 @@ export default function BoardItem( {boardListItem} : Props) {
             </div>
         )}
         </div>
- )
+    )
 }

@@ -103,7 +103,7 @@ const SearchButton = () => {
     //Render 검색 버튼 true 상태
     return (
       <div className='header-search-input-box'>
-        <input className='header-search-input' type='text' placeholder='검색어를 입력해주세요.' value={word} 
+        <input className='header-search-input' type='text' placeholder='검색어를 입력해주세요.' value={word}
         onChange={onSearchWordChangeHandler} onKeyDown={onSearchWordKeyDownHandler}/>
         <div ref={searchButtonRef} className='icon-button' onClick={onSearchButtonClickHandler}>
           <div className='icon search-light-icon'></div>

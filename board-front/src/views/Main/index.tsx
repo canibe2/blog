@@ -70,7 +70,7 @@ const MainBottom = () => {
   const [popularWordList,setPopularWordList] = useState<string[]>([]);
 
   //Function : get latest board list response
-  const getLatestBoardListReponse = (responseBody: GetLatestBoardListResponseDto | ResponseDto | null) => {
+  const getLatestBoardListResponse = (responseBody: GetLatestBoardListResponseDto | ResponseDto | null) => {
     if(!responseBody) return;
     const { code } = responseBody;
     if(code === 'DBE') alert('데이터베이스 오류입니다.');
@@ -81,7 +81,7 @@ const MainBottom = () => {
   };
 
   //Function : get popular list response
-  const getPopularListReponse = (responseBody: GetPopularListResponseDto |ResponseDto | null) => {
+  const getPopularListResponse = (responseBody: GetPopularListResponseDto |ResponseDto | null) => {
   if(!responseBody) return;
   const { code } = responseBody;
   if(code === 'DBE') alert('데이터베이스 오류입니다.');
@@ -91,15 +91,18 @@ const MainBottom = () => {
   setPopularWordList(popularWordList);
   }
   //Event Handler : 인기 검색어 클릭 이벤트
+    const [preSearchWord, setPreSearchWord] = useState<string | null>(null);
+
     const onPopularWordClickHandler = (word:string) => {
-    navigate(SEARCH_PATH(word));
+    navigate(SEARCH_PATH(word), { state : {preSearchWord}});
+    setPreSearchWord(word);
     };
 
   //Effect : 첫 마운트 시 실행될 함수
   useEffect(() => {
     /* setCurrentBoardList(latestBoardListMock); */
-    getLatestBoardListRequest().then(getLatestBoardListReponse);
-    getPopularListRequest().then(getPopularListReponse);
+    getLatestBoardListRequest().then(getLatestBoardListResponse);
+    getPopularListRequest().then(getPopularListResponse);
   }, []);
   return (
     <div id='main-bottom-wrapper'>

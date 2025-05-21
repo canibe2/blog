@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.core.annotation.MergedAnnotations.Search;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -44,9 +45,11 @@ import com.myblog.board_back.repository.resultSet.GetCommentListResultSet;
 import com.myblog.board_back.repository.resultSet.GetFavoriteListResultSet;
 import com.myblog.board_back.service.BoardService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BoardServiceImplement implements BoardService {
 
@@ -190,6 +193,7 @@ public class BoardServiceImplement implements BoardService {
             boolean relation = preSearchWord != null && !preSearchWord.trim().isEmpty();
 
             if (relation) {
+
                 searchLogEntity = new SearchLogEntity(preSearchWord, searchWord, relation);
                 searchLogRepository.save(searchLogEntity);
             }

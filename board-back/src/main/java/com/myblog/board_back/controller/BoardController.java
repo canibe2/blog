@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myblog.board_back.dto.request.board.PatchBoardRequestDto;
 import com.myblog.board_back.dto.request.board.PostBoardRequestDto;
 import com.myblog.board_back.dto.request.board.PostCommentRequestDto;
-import com.myblog.board_back.dto.response.ResponseDto;
 import com.myblog.board_back.dto.response.board.DeleteBoardResponseDto;
 import com.myblog.board_back.dto.response.board.GetBoardResponseDto;
 import com.myblog.board_back.dto.response.board.GetCommentListResponseDto;

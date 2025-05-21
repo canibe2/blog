@@ -4,12 +4,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myblog.board_back.dto.response.search.GetPopularListResponseDto;
+import com.myblog.board_back.dto.response.search.GetRelationListResponseDto;
 import com.myblog.board_back.service.SearchService;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping(value = "/api/v1/search")
@@ -24,6 +26,16 @@ public class SearchController {
         ResponseEntity<? super GetPopularListResponseDto> response = searchService.getPopularList();
 
         return response;
+    }
+
+    @GetMapping("/{searchWord}/relation-list")
+    public ResponseEntity<? super GetRelationListResponseDto> getRelationList(
+            @PathVariable("searchWord") String searchWord) {
+
+        ResponseEntity<? super GetRelationListResponseDto> response = searchService.getRelationList(searchWord);
+
+        return response;
+
     }
 
 }
