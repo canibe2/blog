@@ -22,7 +22,7 @@ const MainTop = () => {
   //State : 주간 top3 게시물 리스트
   const [top3BoardList,setTop3BoardList] = useState<BoardListItem[]>([]);
 
-  //Function : get Top3 board list reponse
+  //Function : get Top3 board list response
   const getTop3BoardListResponse = (responseBody: GetTop3BoardListResponseDto | ResponseDto | null) => {
     if(!responseBody) return;
     const { code } = responseBody;
@@ -33,7 +33,7 @@ const MainTop = () => {
     setTop3BoardList(top3List);
   }
 
-  //Effect : 첫 마운트 시 실행될 함수
+  //Effect : 첫 마운트 시 실행
   useEffect(() => {
     getTop3BoardListRequest().then(getTop3BoardListResponse);
   }, []);
@@ -64,7 +64,8 @@ const MainBottom = () => {
   const [currentBoardList,setCurrentBoardList] = useState<BoardListItem[]>([]); */
 
   //State : 페이지네이션 관련
-  const { currentPage, currentSection, viewList, viewPageList, totalSection, setCurrentPage, setCurrentSection, setTotalList} = usePagination<BoardListItem>(5);
+  const { currentPage, currentSection, viewList, viewPageList, totalSection,
+    setCurrentPage, setCurrentSection, setTotalList} = usePagination<BoardListItem>(5);
 
   //State : 인기 검색어 리스트
   const [popularWordList,setPopularWordList] = useState<string[]>([]);
