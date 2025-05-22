@@ -12,6 +12,7 @@ import com.myblog.board_back.dto.response.board.GetFavoriteListResponseDto;
 import com.myblog.board_back.dto.response.board.GetLatestBoardListResponseDto;
 import com.myblog.board_back.dto.response.board.GetSearchBoardListResponseDto;
 import com.myblog.board_back.dto.response.board.GetTop3BoardListResponseDto;
+import com.myblog.board_back.dto.response.board.GetUserBoardListResponseDto;
 import com.myblog.board_back.dto.response.board.IncreaseViewCountResponseDto;
 import com.myblog.board_back.dto.response.board.PatchBoardResponseDto;
 import com.myblog.board_back.dto.response.board.PostBoardResponseDto;
@@ -45,4 +46,6 @@ public interface BoardService {
 
         ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoardList(String searchWord,
                         String preSearchWord);
+
+        ResponseEntity<? super GetUserBoardListResponseDto> getUserBoardList(String email);
 }

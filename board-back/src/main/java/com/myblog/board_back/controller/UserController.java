@@ -3,12 +3,13 @@ package com.myblog.board_back.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myblog.board_back.dto.response.user.GetSignInUserResponseDto;
+import com.myblog.board_back.dto.response.user.GetUserResponseDto;
 import com.myblog.board_back.service.UserService;
-
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,6 +26,15 @@ public class UserController {
         ResponseEntity<? super GetSignInUserResponseDto> response = userService.getSignInUser(email);
 
         return response;
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<? super GetUserResponseDto> getUser(@PathVariable("email") String email) {
+
+        ResponseEntity<? super GetUserResponseDto> response = userService.getUser(email);
+
+        return response;
+
     }
 
 }
