@@ -1,23 +1,35 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import './style.css';
 import defaultProfileImage from 'assets/image/default-profile-image.png';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { BoardListItem } from 'types/interface';
+import { latestBoardListMock } from 'mocks';
+import BoardItem from 'components/BoardItem';
+import { BOARD_PATH } from 'constants/index';
+import { BOARD_WRITE_PATH } from 'constants/index';
+import { USER_PATH } from 'constants/index';
+import { useLoginUserStore } from 'stores';
 
 //Component 유저 화면
 export default function UserPage() {
 
-//State :  이미지 파일 인풋 참조
-const imageInputRef = useRef<HTMLInputElement | null>(null);
-
-
 //State : 마이페이지 여부
 const { userEmail }= useParams();
+
+//State : 로그인 유저
+const { loginUser } = useLoginUserStore();
+
+//State : 유저이메일 path variable
+const [isMyPage, setMyPage] = useState<Boolean>(true);
+
+//Function : 네비게이트
+const navigate = useNavigate();
 
 //Component : 유저화면 상단
 const UserTop = () => {
 
-//State : 마이페이지 여부
-const [isMyPage, setMyPage] = useState<Boolean>(true);
+//State :  이미지 파일 인풋 참조
+const imageInputRef = useRef<HTMLInputElement | null>(null);
 
 //State : 닉네임 변경 여부
 const [isNicknameChange, setNicknameChange] = useState<Boolean>(false);
@@ -125,16 +137,69 @@ useEffect(() => {
           </div>
         </div>
       );
-    
   };
 
-  //Component : 유저화면 하단
-  const UserBottom = () => {
+//Component : 유저화면 하단
+const UserBottom = () => {
+
+//State : 게시물 개수
+const [count,setCount] = useState<number>(2);
+
+//State 게시물 리스트
+const [userBoardList,setUserBoardList] = useState<BoardListItem[]>([]);
+
+//Event Handler : 사이드 카드 클릭 이벤트
+const onSideCardClickHandler = () => {
+  if(isMyPage) navigate(BOARD_PATH() + '/' + BOARD_WRITE_PATH());
+  
+  else if(loginUser) navigate(USER_PATH(loginUser.email));
+};
+
+//Effect : 유저이메일 path variable 변경 시 실행
+useEffect(() => {
+
+    setUserBoardList(latestBoardListMock);
+
+
+    },[userEmail]);
+
     //Render 하단
     return(
-        <div></div>
+        <div id='user-bottom-wrapper'>
+          <div className='user-bottom-container'>
+          <div className='user-bottom-title'>{isMyPage ? '내가올린 게시물 ' : '게시물 '}<span className='emphasis'>{count}{' 개'}</span></div>
+          <div className='user-bottom-contents-box'>
+            {count === 0 ?
+            <div className='user-bottom-contents-nothing'>{'게시물이 없습니다.'}</div> :
+            <div className='user-bottom-contents'>
+              {userBoardList.map(boardListItem => <BoardItem boardListItem={boardListItem}/>)}
+            </div>
+            }
+            <div className='user-bottom-side-box'>
+            <div className='user-bottom-side-card' onClick={onSideCardClickHandler}>
+              <div className='user-bottom-side-container'>
+                {isMyPage ?
+              <>
+                <div className='icon-box'>
+                  <div className='icon edit-icon'></div>
+                </div>
+                <div className='user-bottom-side-text'>{'글쓰기'}</div>
+                </>:
+                <>
+                <div className='user-bottom-side-text'>{'내 게시물로 가기'}</div>
+                <div className='icon-box'>
+                  <div className='icon arrow-right-icon'></div>
+                </div>
+                </>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+          <div className='user-bottom-pagination-box'></div>
+        </div>
+      </div>
       );
-    
   };
 
   //Render
