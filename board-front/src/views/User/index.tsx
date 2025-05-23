@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import './style.css';
 import defaultProfileImage from 'assets/image/default-profile-image.png';
 import { useParams } from 'react-router-dom';
@@ -17,7 +17,7 @@ const { userEmail }= useParams();
 const UserTop = () => {
 
 //State : 마이페이지 여부
-const [isMyPage, setMyPage] = useState<Boolean>(false);
+const [isMyPage, setMyPage] = useState<Boolean>(true);
 
 //State : 닉네임 변경 여부
 const [isNicknameChange, setNicknameChange] = useState<Boolean>(false);
@@ -31,6 +31,43 @@ const [changeNickname, setChangeNickname] = useState<string>('');
 //State : 프로필 이미지
 const [profileImage, setProfileImage] = useState<string | null>(null);
 
+const nicknameInputRef = useRef<HTMLInputElement | null>(null);
+
+//Event Handler 프로필 이미지 클릭 이벤트
+const onProfileBoxClickHandler = () => {
+  if(!isMyPage) return;
+  if(!imageInputRef.current) return;
+  imageInputRef.current.click();
+};
+
+//Event Handler : 닉네임 수정 버튼 클릭 이벤트
+const onNicknameEditButtonClickHandler = () => {
+  setChangeNickname(nickname);
+  setNicknameChange(!isNicknameChange);
+};
+
+//Event Handler  프로필 이미지 변경 이벤트
+const onProfileImageChangeHandler = (event : ChangeEvent<HTMLInputElement>) =>{
+  if(!event.target.files || !event.target.files.length) return;
+
+  const file = event.target.files[0];
+
+  const data = new FormData();
+
+  data.append('file',file);
+};
+
+//Event Handler 닉네임 변경 이벤트
+const onNicknameChangerHandler = (event : ChangeEvent<HTMLInputElement>) => {
+  const {value} = event.target;
+
+  if(value.length > 8) {
+    alert('닉네임은 최대8자 까지만 입력할 수 있습니다.');
+    return;
+  }
+
+  setChangeNickname(value);
+}
 
 
 //Effect : email path variable 변경 시 실행
@@ -42,23 +79,29 @@ useEffect(() => {
 
     },[userEmail]);
 
+useEffect(() => {
+  if(isNicknameChange && nicknameInputRef.current) {
+    nicknameInputRef.current.focus();
+
+    const len = nicknameInputRef.current.value.length;
+    nicknameInputRef.current.setSelectionRange(len,len);
+  }
+},[isNicknameChange]);
 
     //Render 상단
     return(
         <div id='user-top-wrapper'>
           <div className='user-top-container'>
             {isMyPage ?
-            <div className='user-top-my-profile-image-box'>
+            <div className='user-top-my-profile-image-box' onClick={onProfileBoxClickHandler}>
               {profileImage !== null ?
               
               <div className='user-top-profile-image' style={{backgroundImage:`url(${profileImage})`}}></div> :
-              <div className='user-top-my-profile-image-nothing-box'>
                   <div className='icon-box-large'>
                     <div className='icon image-box-white-icon'></div>
                   </div>
-                </div>
               }
-              <input ref={imageInputRef} type='file' accept='image/*' style={{display:'none'}}/>
+              <input ref={imageInputRef} type='file' accept='image/*' style={{display:'none'}} onChange={onProfileImageChangeHandler}/>
             </div> :
             <div className='user-top-profile-image-box' style={{backgroundImage:`url(${profileImage ? profileImage : defaultProfileImage})`}}></div>
             }
@@ -67,10 +110,10 @@ useEffect(() => {
                 {isMyPage ?
                 <>
                 {isNicknameChange ?
-                <input className='user-top-info-nickname-input' type='text' size={changeNickname.length + 1} value={changeNickname}/> :
+                <input ref={nicknameInputRef} className='user-top-info-nickname-input' type='text' size={changeNickname.length + 2} value={changeNickname} onChange={onNicknameChangerHandler}/> :
                 <div className='user-top-info-nickname'>{nickname}</div>
                 }
-                <div className='icon-button'>
+                <div className='icon-button' onClick={onNicknameEditButtonClickHandler}>
                   <div className='icon edit-icon'></div>
                 </div>
                 </> :
