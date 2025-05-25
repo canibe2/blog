@@ -2,11 +2,11 @@ import axios from 'axios';
 import { SignInRequestDto, SignUpRequestDto } from './request/auth';
 import { SignInResponseDto, SignUpResponseDto } from './response/auth';
 import { ResponseDto } from './response';
-import { GetSignInUserResponseDto } from './response/user';
+import { GetSignInUserResponseDto, GetUserResponseDto, PatchNicknameResponseDto, PatchProfileImageResponseDto } from './response/user';
 import { PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto } from './request/board';
-import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto, DeleteBoardResponseDto, PatchBoardResponseDto, GetLatestBoardListResponseDto, GetTop3BoardListResponseDto, GetSearchBoardListResponseDto } from './response/board';
-import { error } from 'console';
+import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto, DeleteBoardResponseDto, PatchBoardResponseDto, GetLatestBoardListResponseDto, GetTop3BoardListResponseDto, GetSearchBoardListResponseDto, GetUserBoardListResponseDto } from './response/board';
 import { GetPopularListResponseDto } from './response/search';
+import { PatchNicknameRequestDto, PatchProfileImageRequestDto } from './request/user';
 
 const DOMAIN = 'http://localhost:4000';
 
@@ -77,6 +77,45 @@ export const getRelationListRequest = async (searchWord : string) => {
         return responseBody;
     })
     .catch(error => {
+        if(!error.response)
+        return null;
+        const responseBody : ResponseDto = error.response.data;
+        return responseBody;
+    });
+    return result;
+};
+
+const GET_USER_URL = (email : string) => `${API_DOMAIN}/user/${email}`;
+const GET_SIGN_IN_USER_URL = () => `${API_DOMAIN}/user`;
+const PATCH_NICKNAME_URL = () => `${API_DOMAIN}/user/nickname`;
+const PATCH_PROFILE_IMAGE_URL =() => `${API_DOMAIN}/user/profile-image`;
+
+export const getUserRequest = async (email : string) => {
+    const result = await axios.get(GET_USER_URL(email))
+    .then(response => {
+
+        const responseBody : GetUserResponseDto = response.data;
+        return responseBody;
+    })
+    .catch(error =>{
+
+        if(!error.response)
+        return null;
+
+        const responseBody : ResponseDto  = error.response.data;
+        return responseBody;
+    });
+    return result;
+};
+
+export const patchNicknameRequest = async (requestBody : PatchNicknameRequestDto, accessToken : string) => {
+
+    const result = await axios.patch(PATCH_NICKNAME_URL(), requestBody, authorization(accessToken))
+    .then(response => {
+        const responseBody : PatchNicknameResponseDto = response.data;
+        return responseBody;
+    })
+    .catch(error=>{
         if(!error.response) return null;
         const responseBody : ResponseDto = error.response.data;
         return responseBody;
@@ -84,7 +123,20 @@ export const getRelationListRequest = async (searchWord : string) => {
     return result;
 };
 
-const GET_SIGN_IN_USER_URL = () => `${API_DOMAIN}/user`;
+export const patchProfileImageRequest = async (requestBody : PatchProfileImageRequestDto, accessToken : string) => {
+
+    const result = await axios.patch(PATCH_PROFILE_IMAGE_URL(), requestBody, authorization(accessToken))
+    .then(response => {
+        const responseBody : PatchProfileImageResponseDto = response.data;
+        return responseBody;
+    })
+    .catch(error=>{
+        if(!error.response) return null;
+        const responseBody : ResponseDto = error.response.data;
+        return responseBody;
+    });
+    return result;
+};
 
 export const getSignInUserRequest = async (accessToken : string) => {
     const result = await axios.get(GET_SIGN_IN_USER_URL(), authorization(accessToken))
@@ -106,12 +158,13 @@ export const getSignInUserRequest = async (accessToken : string) => {
 
     });
     return result;
-}
+};
 
 const GET_BOARD_URL = (boardNumber : number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 const GET_LATEST_BOARD_LIST_URL = () => `${API_DOMAIN}/board/latest-list`;
 const GET_TOP_3_BOARD_LIST_URL = () => `${API_DOMAIN}/board/top-3`;
 const GET_SEARCH_BOARD_LIST_URL = (searchWord : string, preSearchWord : string | null) => `${API_DOMAIN}/board/search-list/${searchWord}${preSearchWord ? '/' + preSearchWord : ' '}`;
+const GET_USER_BOARD_LIST_URL = (email : string) => `${API_DOMAIN}/board/user-board-list/${email}`;
 const INCREASE_VIEW_COUNT_URL =  (boardNumber : number | string) => `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
 const GET_FAVORITE_LIST_URL = (boardNumber : number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite-list`;
 const GET_COMMENT_LIST_URL = (boardNumber : number | string) => `${API_DOMAIN}/board/${boardNumber}/comment-list`;
@@ -139,7 +192,7 @@ export const getBoardRequest = async (boardNumber : number | string) => {
             return responseBody;
     })
     return result;
-}
+};
 
 export const getLatestBoardListRequest = async () => {
     const result = await axios.get(GET_LATEST_BOARD_LIST_URL())
@@ -182,7 +235,21 @@ export const getSearchBoardListRequest = async (searchWord : string, preSearchWo
         return responseBody;
     });
     return result;
-}
+};
+
+export const getUserBoardListRequest = async (email : string) => {
+    const result = await axios.get(GET_USER_BOARD_LIST_URL(email))
+    .then(response => {
+        const responseBody : GetUserBoardListResponseDto = response.data;
+        return responseBody;
+    })
+    .catch (error => {
+        if(!error.response) return null;
+        const responseBody : ResponseDto = error.response.data;
+        return responseBody;
+    });
+    return result;
+};
 
 export const increaseViewCountRequest =async (boardNumber : number | string) => {
     const result = await axios.get(INCREASE_VIEW_COUNT_URL(boardNumber))
@@ -202,7 +269,7 @@ export const increaseViewCountRequest =async (boardNumber : number | string) => 
             return responseBody;
     })
     return result;
-}
+};
 
 export const getFavoriteListRequest = async(boardNumber : number | string) => {
     const result = await axios.get(GET_FAVORITE_LIST_URL(boardNumber))
@@ -219,7 +286,7 @@ export const getFavoriteListRequest = async(boardNumber : number | string) => {
 
     });
     return result;
-}
+};
 
 export const getCommentListRequest = async (boardNumber : number | string) => {
     const result = await axios.get(GET_COMMENT_LIST_URL(boardNumber))
@@ -235,7 +302,7 @@ export const getCommentListRequest = async (boardNumber : number | string) => {
         return responseBody;
     });
     return result;
-}
+};
 
 export const postBoardRequest = async (requestBody : PostBoardRequestDto, accessToken : string) => {
     const result = await axios.post(POST_BOARD_URL(), requestBody, authorization(accessToken))
@@ -253,7 +320,7 @@ export const postBoardRequest = async (requestBody : PostBoardRequestDto, access
         return responseBody;
     })
     return result;
-    }
+};
 
 
 export const postCommentRequest = async (boardNumber : number | string, requestBody : PostCommentRequestDto, accessToken:string) => {
@@ -270,7 +337,7 @@ export const postCommentRequest = async (boardNumber : number | string, requestB
 
     })
     return result;
-}
+};
 
 export const patchBoardRequest = async (boardNumber : number | string, requestBody : PatchBoardRequestDto, accessToken : string) => {
 
@@ -289,7 +356,7 @@ export const patchBoardRequest = async (boardNumber : number | string, requestBo
     });
     return result;
 
-    }
+};
 
 export const putFavoriteRequest = async (boardNumber : number | string, accessToken : string) => {
     const result = await axios.put(PUT_FAVORITE_URL(boardNumber),{},authorization(accessToken))
@@ -305,7 +372,7 @@ export const putFavoriteRequest = async (boardNumber : number | string, accessTo
         
     })
     return result;
-}
+};
 
 export const deleteBoardRequest = async (boardNumber : number | string, accessToken : string) => {
     const result = await axios.delete(DELETE_BOARD_URL(boardNumber), authorization(accessToken))
@@ -321,7 +388,7 @@ export const deleteBoardRequest = async (boardNumber : number | string, accessTo
 
     })
     return result;
-}
+};
 
 //파일 업로드 도메인
 const FILE_DOMAIN = `${DOMAIN}/file`;
@@ -340,4 +407,4 @@ export const fileUploadRequest = async (data : FormData) => {
                 return null;
             });
             return result;
-}
+};

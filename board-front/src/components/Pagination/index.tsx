@@ -54,8 +54,8 @@ const onNextClickHandler = () => {
       <div className='pagination-divider'>{'\|'}</div>
 
       {viewPageList.map(page => page === currentPage ?
-      <div className='pagination-text-active'>{page}</div> :
-      <div className='pagination-text' onClick={()=> onPageClickHandler(page)}>{page}</div>
+      <div key={page} className='pagination-text-active'>{page}</div> :
+      <div key={page} className='pagination-text' onClick={()=> onPageClickHandler(page)}>{page}</div>
       )}
       <div className='pagination-divider'>{'\|'}</div>
 

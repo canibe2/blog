@@ -1,12 +1,14 @@
 
-#board-detail-wrapper {
+#board-detail-wrapper{
+
     padding: 100px 0;
     display: flex;
-    justify-content: center;
+    justify-content: center
+
 }
 
 .board-detail-container {
-    width: 996px;
+    width: 1200px;
     display: flex;
     flex-direction: column;
     gap : 20px;
@@ -30,6 +32,7 @@
     font-size: 32px;
     font-weight: 600;
     line-height: 140%;
+    margin-bottom: 5px;
 }
 
 .board-detail-top-sub-box {
@@ -153,6 +156,7 @@
 .board-detail-bottom-button-box {
     display: flex;
     gap : 12px;
+    justify-content: flex-start;
 }
 
 .board-detail-bottom-button-group {
@@ -177,6 +181,7 @@
 .board-detail-bottom-favorite-container {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap : 20px;
 }
 
@@ -259,3 +264,14 @@
     justify-content: flex-end;
     
 }
+
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: static !important; /* 강제 위치 초기화 */
+    margin-left: 0 !important;   /* 강제 왼쪽 정렬 */
+    margin-top: 20px;
+}
+

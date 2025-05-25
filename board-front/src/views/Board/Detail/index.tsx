@@ -141,7 +141,7 @@ import { usePagination } from 'hooks';
     }
 
     //Event handler : 삭제 버튼 클릭
-    const onDeleteButtonClickHanlder = () => {
+    const onDeleteButtonClickHandler = () => {
 
       if(!boardNumber || !board || !loginUser || !cookies.accessToken) return;
 
@@ -183,7 +183,7 @@ import { usePagination } from 'hooks';
             <div className='board-detail-more-box'>
               <div className='board-detail-update-button' onClick={onUpdateButtonClickHandler}>{'수정'}</div>
               <div className='divider'></div>
-              <div className='board-detail-delete-button' onClick={onDeleteButtonClickHanlder}>{'삭제'}</div>
+              <div className='board-detail-delete-button' onClick={onDeleteButtonClickHandler}>{'삭제'}</div>
             </div>
             }
           </div>
@@ -191,7 +191,7 @@ import { usePagination } from 'hooks';
         <div className='divider'></div>
         <div className='board-detail-top-main'>
           <div className='board-detail-main-text'>{board.content}</div>
-          {board.boardImageList.map(image => <img className='board-detail-main-image' src={image}/>)}
+          {board.boardImageList.map(image => <img key={image} className='board-detail-main-image' src={image}/>)}
           
         </div>
       </div>
@@ -212,7 +212,7 @@ import { usePagination } from 'hooks';
       //State 좋아요 보기
       const [showFavorite, setShowFavorite] = useState<boolean>(false);
        //State 댓글 보기
-      const [showComment, setShowComment] = useState<boolean>(false);
+      const [showComment, setShowComment] = useState<boolean>(true);
       //State 댓글
       const [comment, setComment] = useState<string>('');
       //State 전체 댓글 개수
@@ -287,6 +287,12 @@ import { usePagination } from 'hooks';
 
       //Event handler 좋아요 클릭
       const onFavoriteClickHandler = () =>{
+
+        if(!loginUser){
+          alert('로그인 후 이용 가능합니다.');
+          return;
+        }
+
         if(!boardNumber || !loginUser || !cookies.accessToken) return;
         putFavoriteRequest(boardNumber, cookies.accessToken).then(putFavoriteResponse);
       }
@@ -372,7 +378,7 @@ import { usePagination } from 'hooks';
             <div className='board-detail-bottom-favorite-container'>
               <div className='board-detail-bottom-favorite-title'>{'좋아요 '}<span className='emphasis'>{favoriteList.length}</span></div>
               <div className='board-detail-bottom-favorite-contents'>
-                {favoriteList.map(item => <FavoriteItem favoriteListItem={item}/>)}
+                {favoriteList.map(item => <FavoriteItem key={item.nickname} favoriteListItem={item}/>)}
               </div>
             </div>
           </div>
@@ -382,7 +388,7 @@ import { usePagination } from 'hooks';
             <div className='board-detail-bottom-comment-container'>
               <div className='board-detail-bottom-comment-title'>{'댓글 '}<span className='emphasis'>{totalCommentCount}</span></div>
               <div className='board-detail-bottom-comment-list-container'>
-                {viewList.map(item => <CommentItem commentListItem={item}/>)}
+                {viewList.map(item => <CommentItem key={item.nickname} commentListItem={item}/>)}
               </div>
             </div>
             <div className='divider'></div>

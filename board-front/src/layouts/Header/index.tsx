@@ -76,9 +76,14 @@ const SearchButton = () => {
   };
   //Event handler 검색 버튼 클릭 이벤트 처리
   const onSearchButtonClickHandler = () => {
-
     if(!status) {
       setStatus(!status);
+      return;
+    }
+    
+
+    if(!word || word.trim() === '') {
+      alert('검색어를 입력해주세요.');
       return;
     }
     navigate(SEARCH_PATH(word));

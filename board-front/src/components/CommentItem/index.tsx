@@ -35,7 +35,7 @@ export default function CommentItem({commentListItem}: Props) {
             </div>
 
             <div className='comment-list-item-nickname'>{nickname}</div>
-            <div className='comment-list-item-divider'>{profileImage}</div>
+            {/* <div className='comment-list-item-divider'>{profileImage}</div> */}
             <div className='comment-list-item-time'>{getElapsedTime()}</div>
 
         </div>
